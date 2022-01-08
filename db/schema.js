@@ -21,6 +21,7 @@ const typeDefs = gql`
   }
 
   type Client {
+    
     id:ID
     name : String
     lastName : String
@@ -44,6 +45,17 @@ const typeDefs = gql`
     state : String
     createdAt : String
   }
+
+  type TopClient {
+    total : Float
+    client : [Client]
+  }
+   type TopSalesman {
+     total : Float
+     salesMan : [User]
+
+
+   }
   input UserInput {
     name: String!
     lastName : String!
@@ -102,7 +114,14 @@ const typeDefs = gql`
     getOrderOFSalsman : [Order]
     getOrder(id:ID!) : Order
     getOrdersByState(state:OrderState) :[Order]
+
+    #Advanced Query
+    getBestClients : [TopClient]
+    getBestSalesmen : [TopSalesman]
+    serachProduct(text :String!) : [Product]
+
   }
+##################################################
   type Mutation {
     #Users
     newUser(input : UserInput!) :User

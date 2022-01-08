@@ -23,5 +23,5 @@ const productSchema = mongoose.Schema({
 
 })
 
-
+productSchema.index({name:"text"})
 module.exports = mongoose.model('Product', productSchema);

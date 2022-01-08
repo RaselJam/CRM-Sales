@@ -78,6 +78,63 @@ const resolvers = {
       const orders = await Order.find({ salesMan: ctx.user.id, state: state });
       return orders;
 
+    },
+    getBestClients: async () => {
+      const clients = await Order.aggregate([
+        { $match: { state: "COMPLETED" } },
+        {
+          $group: {
+            _id: "$client",
+            total: { $sum: "$total" }
+          }
+        },
+        {
+          $lookup: {
+            from: 'clients',
+            localField: '_id',
+            foreignField: '_id',
+            as: "client"
+          }
+        },
+        {$limit : 3},
+        {
+          $sort : {total :-1}
+        }
+      ])
+      clients.forEach(elm=> elm.client[0].id=elm.client[0]._id)
+      return clients;
+    },
+    getBestSalesmen : async ()=>{
+
+      const salesMen = await Order.aggregate([
+        { $match: { state: "COMPLETED" } },
+        {
+          $group: {
+            _id: "$salesMan",
+            total: { $sum: "$total" }
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            foreignField: '_id',
+            as: "salesMan"
+          }
+        },
+        {$limit : 3},
+        {
+          $sort : {total :-1}
+        }
+      ])
+      salesMen.forEach(elm=> elm.salesMan[0].id=elm.salesMan[0]._id)
+      return salesMen;
+
+    },
+    serachProduct :  async (_, { text }) =>{
+      const product = await Product.find({$text :{$search : text}}).limit(10)
+       return product;
+
     }
   },
 
