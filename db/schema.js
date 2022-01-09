@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server')
+const { gql } = require("apollo-server");
 //schema
 const typeDefs = gql`
  type Token {
@@ -98,7 +98,7 @@ const typeDefs = gql`
 
   type Query {
     # Usres
-    getUser(token : String!) : User
+    getUser : User
 
     # products
     getProducts :[Product]
